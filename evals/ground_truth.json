@@ -13,7 +13,8 @@
         },
         {
           "document_title": "Master Circular for Research Analysts",
-          "must_appear_on_pages": [1]
+          "must_appear_on_pages": [1],
+          "aliases": ["Master Circular for Research Analysts dated February 06, 2026", "Master Circular for Research Analysts (RAs)"]
         },
         {
           "document_title": "SEBI (Research Analysts) Regulations, 2014",
@@ -79,7 +80,7 @@
           "must_appear_on_pages": [1]
         },
         {
-          "document_title": "SEBI (Mutual Funds) Regulations, 2026",
+          "document_title": "SEBI (Mutual Funds) Regulations, 1996",
           "must_appear_on_pages": [1]
         }        
       ]

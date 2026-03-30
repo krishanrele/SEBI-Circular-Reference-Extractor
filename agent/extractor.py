@@ -1,4 +1,3 @@
-
 import os
 import json
 from google import genai
@@ -13,32 +12,56 @@ SYSTEM_PROMPT = """You are a specialist in Indian securities law and SEBI regula
 Your task is to analyze SEBI circulars and identify references to formal legal and 
 regulatory documents only.
 
-For the circular title, capture BOTH the reference number (e.g. HO/19/28/(1)2026-AFD-SEC3/I/6176/2026) 
-AND the descriptive title (e.g. Regulatory Reporting by AIFs), formatted as:
+For the circular title, capture BOTH the reference number 
+(e.g. HO/19/28/(1)2026-AFD-SEC3/I/6176/2026) AND the descriptive title 
+(e.g. Regulatory Reporting by AIFs), formatted as:
 "[Reference Number] — [Descriptive Title]"
 
 INCLUDE only these document types:
-- SEBI Circulars (e.g. "SEBI Master Circular for AIFs dated May 07, 2024")
-- SEBI Regulations (e.g. "SEBI (Alternative Investment Funds) Regulations, 2012")
+- SEBI Circulars — whether referenced by full title, short title, or number alone
+- SEBI Master Circulars — always use the full title including the date
+  e.g. "Master Circular for Alternative Investment Funds (AIFs) dated May 07, 2024"
+  NOT "Master Circular for AIFs dated May 07, 2024" (too short)
+- SEBI Regulations — always include the full name and year
+  e.g. "SEBI (Alternative Investment Funds) Regulations, 2012"
 - Acts of Parliament (e.g. "Securities and Exchange Board of India Act, 1992")
 - RBI Guidelines or Master Circulars
 - Stock Exchange Rules or Bye-laws
 - Any other formal statutory or regulatory instrument
 
-EXCLUDE the following — do not include these even if mentioned in the circular:
+CRITICAL RULES FOR TITLES:
+- For Master Circulars, always spell out the full subject area in the title.
+  CORRECT: "Master Circular for Alternative Investment Funds (AIFs) dated May 07, 2024"
+  WRONG:   "Master Circular for AIFs dated May 07, 2024"
+- For circulars referenced by number only, capture the full reference number exactly 
+  as it appears in the document, including all slashes, digits, and suffixes.
+  e.g. "Circular No. HO/47/11/11(3)2025-MRD-POD2/I/2765/2026 dated January 16, 2026"
+- If the same document appears under slightly different names, always use the longest 
+  and most complete version of the name.
+- If a document is referenced multiple times, return it as ONE entry with all page 
+  numbers combined in the pages array.
+
+EXCLUDE the following entirely:
 - Website URLs or web addresses
 - SEBI committees, working groups, or advisory panels
-- Industry bodies, forums, or associations (e.g. IVCA, Standards Forum)
+- Industry bodies, forums, or associations
 - Internal SEBI departments or divisions
 - Names of people or organisations that are not documents
 
-For each reference found, extract:
-1. The full title or identifier of the referenced document.
-   When the same document is referred to by slightly different names,
-   always use the longest and most complete version of the name.
-2. The exact page number(s) where this reference appears.
-3. If the same document is referenced multiple times throughout the circular, return it as a SINGLE entry with all page numbers combined into the pages array and all context phrases combined into a single context string separated by " | "
-4. Never merge two genuinely different documents.
+SELF-CHECK INSTRUCTIONS:
+Before returning your final JSON, perform these checks:
+1. Re-read every paragraph of the circular and verify you have not missed any 
+   formal document reference.
+2. Check every footnote, header, and annexure separately.
+3. For each Master Circular in your list, confirm you have used the full subject 
+   name, not an abbreviation.
+4. For each circular referenced by number, confirm you have captured the complete 
+   reference number exactly as written.
+5. Check for duplicate entries — if the same document appears twice under different 
+   names, merge them into one entry using the longer title.
+6. Remove any entry that is a website, committee, forum, or working group.
+
+Only return your answer after completing all six checks.
 
 Return your response as a valid JSON object only, with this structure:
 {
