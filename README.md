@@ -53,15 +53,14 @@ This means every change to the agent is measurable, not subjective.
 
 ## Evaluation Results
 
-| Version | Change | Failures | Successes | Number of Documents |
-|---|---|---|---|---|
-| v1.0 | Initial release | 0 Failures | 5 Successes | 1 |
-| v1.1 | Added 3 more documents to test agent further | 10 Failures | 10 Successes | 4 |
-| v1.2 | Ground Truth Adjustment | 4 Failures | 16 Successes | 4 |
-| v1.3 | Improved Reference Capture and Reduced Hallucinations | 3 Failures | 17 Successes | 4 |
-| v1.4 | Document Type Fix and Alias Matching | 5 Failures | 15 Successes | 4 |
-| v1.5 | Type Validation Fix and Ground Truth Completion | 0 Failures | 20 Successes | 4 |
-
+| Version | Change | Failures | Successes | Documents | Notes |
+|---|---|---|---|---|---|
+| v1.0 | Initial release | 0 | 5 | 1 | Baseline |
+| v1.1 | Added 3 more circulars | 10 | 10 | 4 | Expanded test coverage revealed gaps |
+| v1.2 | Ground truth adjustment + prompt update | 4 | 16 | 4 | Prompt now captures number-only references |
+| v1.3 | Self-check prompt + fuzzy matching | 3 | 17 | 4 | Gemini now verifies its own output |
+| v1.4 | Alias matching introduced | 5 | 15 | 4 | Temporary dip — alias logic exposed ground truth gaps |
+| v1.5 | Type validation fix + ground truth completed | 0 | 20 | 4 | All tests passing |
 
 See [CHANGELOG.md](CHANGELOG.md) for the full improvement log.
 
